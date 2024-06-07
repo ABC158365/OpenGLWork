@@ -1,0 +1,5 @@
+/.vs/CustomEngine/v17/ipch/AutoPCH/150b6b19f128162d/CUBE.ipch filter=lfs diff=lfs merge=lfs -text
+/.vs/CustomEngine/v17/ipch/AutoPCH/1b57d26df1a247bd/CUSTOMENGINE.ipch filter=lfs diff=lfs merge=lfs -text
+/.vs/CustomEngine/v17/ipch/AutoPCH/8fc8f4ae8caf59c9/CUBE.ipch filter=lfs diff=lfs merge=lfs -text
+/.vs/CustomEngine/v17/ipch/AutoPCH/990c81a34adffa99/CUSTOMENGINE.ipch filter=lfs diff=lfs merge=lfs -text
+/x64/Debug/CustomEngine.pdb filter=lfs diff=lfs merge=lfs -text
