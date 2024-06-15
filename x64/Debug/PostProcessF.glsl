@@ -11,21 +11,21 @@ layout (binding=2) uniform usampler2D stencil;
         FragColor = vec4(color, 1.0);
 
     
-        uvec3 st = texture(stencil, TexCoords).rgb;
+        uint st = texture(stencil, TexCoords).r;
 
         vec3 color1 = texture(buff, TexCoords).rgb;
         vec4 FragColor1 = vec4(color1, 1.0);
 
         bool res = false;
-        vec3 left = texture(buff, TexCoords +vec2(1.0, 0.0) / textureSize(buff, 0)).rgb;
-        vec3 right = texture(buff, TexCoords+vec2(-1.0, 1.0) / textureSize(buff, 0)).rgb;
-        vec3 up = texture(buff, TexCoords +vec2(0.0, 1.0) / textureSize(buff, 0)).rgb;
-        vec3 down = texture(buff, TexCoords+vec2(0.0, -1.0) / textureSize(buff, 0)).rgb;
-        if(left.r + right.r > 0.99 && left.r + right.r < 1.01)res = true;
-        if(up.r + down.r > 0.99 && up.r + down.r < 1.01)res = true;
+        uint left = texture(stencil, TexCoords +vec2(1.0, 0.0) / textureSize(stencil, 0)).r;
+        uint right = texture(stencil, TexCoords+vec2(-1.0, 1.0) / textureSize(stencil, 0)).r;
+        uint up = texture(stencil, TexCoords +vec2(0.0, 1.0) / textureSize(stencil, 0)).r;
+        uint down = texture(stencil, TexCoords+vec2(0.0, -1.0) / textureSize(stencil, 0)).r;
+        if(left + right == 255)res = true;
+        if(up + down == 255)res = true;
         
 
-        FragColor = (st.r>0)?vec4(1.0, 0.0, 0.0, 1.0):FragColor;
+        FragColor = (res)?vec4(1.0, 0.0, 0.0, 1.0):FragColor;
 
         // Output the integer stencil value as grayscale
        // FragColor = vec4(vec3(float(packedValue)/255), 1.0);

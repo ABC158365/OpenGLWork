@@ -6,7 +6,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-
+#include <map>
 
 class Material
 {
@@ -30,5 +30,18 @@ public:
 	static void setInt(uint32_t ID, const std::string& name, int value);
 	static void setFloat(uint32_t ID, const std::string& name, float value);
 	static void readAfterBindTex(const char* file, bool isRGB, bool flip);
+};
+
+struct TextureStorage {
+	std::vector<unsigned char*> datas;
+	std::vector<uint32_t> textures;
+};
+
+class TextureManager {
+public:
+	std::map<std::string, TextureStorage> Manager;
+	void upLoadTexture(std::string objectRef, std::vector<std::string>& paths);
+	void BindTextures(std::string objectRef);
+	void destroyTexture(std::string objectRef);
 };
 

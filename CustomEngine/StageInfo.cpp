@@ -12,6 +12,7 @@ void RegionA::SpawnMember() {
 
 		
 		StaticMesh* renderCube = new StaticMesh(Cvector::CVector(1., 12., 1.), Cvector::CVector(x, 6, y), Cmath::pi<float>() / 4 - perangle * i ,mat);
+
 		meshes.push_back(renderCube);
 	}
 }

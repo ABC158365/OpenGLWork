@@ -73,15 +73,13 @@ Camera* camera01 = new Camera(0.01, Cmatrix::perspective(Cmath::radians(45.0f), 
 Camera* currentCam = camera00;
 
 
-void matrixDemo();
 
 // Main code
 int main(int, char**)
 {
-    matrixDemo();
     //return 0;
 
-
+    
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
@@ -158,7 +156,7 @@ int main(int, char**)
 
 
 
-
+    
     // Main loop
 #ifdef __EMSCRIPTEN__
     // For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
@@ -189,7 +187,14 @@ int main(int, char**)
     regionB1.SpawnMember();
     regionB2.SpawnMember();
     regionC.SpawnMember();
-
+    TextureManager UTextureManager;
+    std::vector<std::string> tpaths;
+    tpaths.push_back("./container.jpg");
+ 
+    UTextureManager.upLoadTexture("regionA", tpaths);
+    tpaths.clear();
+    tpaths.push_back("./test.jpg");
+    UTextureManager.upLoadTexture("regionB", tpaths);
 
     float r = 5;
     Scene scene;
@@ -242,11 +247,11 @@ int main(int, char**)
     glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
 
     glViewport(0, 0, 1280, 720);
-    glEnable(GL_BLEND); //开混合模式贴图
-    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    //glEnable(GL_BLEND); //开混合模式贴图
+    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_DEPTH_TEST);
-
+    
     float currenttime = 0, pretime = 0;
     int count=0;
     int n = 2;
@@ -362,7 +367,7 @@ int main(int, char**)
             currentCam->xpos = io.MousePos.x;
             currentCam->ypos = io.MousePos.y;
         }
-    
+
 
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
@@ -618,8 +623,9 @@ int main(int, char**)
         //glDrawArrays(GL_TRIANGLES, 0, 3);
         
         glStencilFunc(GL_ALWAYS, 255, 255);
+        UTextureManager.BindTextures("regionA");
         regionA.drawmeshes(currentCam);
-
+        UTextureManager.BindTextures("regionB");
         regionB1.drawmeshes(currentCam);
        
         regionB2.drawmeshes(currentCam);
@@ -709,322 +715,5 @@ void processInput(GLFWwindow* window, Camera* camera)
             camera->ProcessKeyboard(RSPEEDDOWN);
 
     }
-}
-
-void matrixDemo()
-{
-    std::ifstream inputFile("test.txt");
-
-    if (!inputFile.is_open()) {
-        std::cout << "无法打开文件" << std::endl;
-    }
-
-
-    std::ofstream outputFile("output.txt", std::ios::out);
-    if (!outputFile) {
-        std::cerr << "无法创建文件" << std::endl;
-    }
-
-
-    std::string line;
-    while (getline(inputFile, line)) {
-        if (line.find("欧拉角转换向量") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                CRotator::CRotator r;
-                Cvector::CVector res;
-                ss >> r.Yaw >> comma >> r.Pitch >> comma >> r.Roll;
-
-                res = Quaternion::EulerToVector(r);
-
-
-                outputFile << "欧拉角转换向量" << std::endl;
-                outputFile << res.x << "," << res.y << "," << res.z << "\n";
-       
-            }
-        }
-        else if (line.find("向量转换欧拉角") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                CRotator::CRotator r;
-                Cvector::CVector res;
-                ss >>res.x >> comma >> res.y >> comma >>res.z;
-
-                r = Quaternion::VectorToEuler(res);
-                outputFile << "欧拉角转换向量" << std::endl;
-                outputFile << r.Yaw << "," << r.Pitch << "," << r.Roll<<'\n';
-
-   
-            }
-
-        }
-        else if (line.find("欧拉角转换矩阵") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                CRotator::CRotator r;
-                Cvector::CVector res;
-                ss >> r.Yaw >> comma >> r.Pitch >> comma >> r.Roll;
-                r.Yaw = r.Yaw;
-                Cmatrix::Mat4x4 a;
-                a = CRotator::getRotationMatrix(r);
-
-                Cvector::CVector4 c;
-                ss >> c[0] >> comma >> c[1] >> comma >> c[2] >> comma;
-                c[3] = 1;
-               
-                outputFile << "欧拉角转换矩阵" << std::endl;
-                outputFile << a[0][0] << "," << a[0][1] << "," << a[0][2] << "," << a[0][3] << "," <<
-                    a[1][0] << "," << a[1][1] << "," << a[1][2] << "," << a[1][3] << "," <<
-                    a[2][0] << "," << a[2][1] << "," << a[2][2] << "," << a[2][3] << "," <<
-                    a[3][0] << "," << a[3][1] << "," << a[3][2] << "," << a[3][3] << "\n";
-    
-            }
-        }
-        else if (line.find("欧拉角标准化") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                CRotator::CRotator r;
-                Cvector::CVector res;
-                ss >> r.Yaw >> comma >> r.Pitch >> comma >> r.Roll;
-                r = CRotator::NormalizeRotator(r);
-
-
-
-                outputFile << "欧拉角标准化" << std::endl;
-                outputFile << r.Yaw << "," << r.Pitch << "," << r.Roll  << "\n";
-
-            }
-        }
-        else if (line.find("矩阵设置旋转") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-                float a;
-                ss >> a;
-
-                Cvector::CVector c;
-                ss >> c[0] >> comma >> c[1] >> comma >> c[2] >> comma; 
-                
-                
-                outputFile << "矩阵设置旋转" << std::endl;
-                outputFile << a << "\t";
-
-                outputFile << c[0] << "," << c[1] << "," << c[2] << "\t";
-                b = Cmatrix::rotate(b, a, c);
-                outputFile << b[0][0] << "," << b[0][1] << "," << b[0][2] << "," << b[0][3] << "," <<
-                    b[1][0] << "," << b[1][1] << "," << b[1][2] << "," << b[1][3] << "," <<
-                    b[2][0] << "," << b[2][1] << "," << b[2][2] << "," << b[2][3] << "," <<
-                    b[3][0] << "," << b[3][1] << "," << b[3][2] << "," << b[3][3] << std::endl;
-            }
-
-        }
-        else if (line.find("矩阵设置平移") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                Cmatrix::Mat4x4 b;
-                char comma;
-                Cvector::CVector c;
-                
-                ss >> c[0] >> comma >> c[1] >> comma >> c[2] >> comma;
-                b = Cmatrix::translate(b, c);
-                outputFile << "矩阵设置平移" << std::endl;
-                outputFile << c[0] << "," << c[1] << "," << c[2] << "\t";
-                outputFile << b[0][0] << "," << b[0][1] << "," << b[0][2] << "," << b[0][3] << "," <<
-                    b[1][0] << "," << b[1][1] << "," << b[1][2] << "," << b[1][3] << "," <<
-                    b[2][0] << "," << b[2][1] << "," << b[2][2] << "," << b[2][3] << "," <<
-                    b[3][0] << "," << b[3][1] << "," << b[3][2] << "," << b[3][3] << std::endl;
-            }
-
-        }
-        else if (line.find("四元数转换矩阵") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-                
-                Quaternion::CQuaternion c;
-                ss >> c.w >> comma >> c.x >> comma >> c.y >> comma >> c.z >> comma;
-                b = Quaternion::QuaternionToMatrix(c);
-                outputFile << "四元数转换矩阵" << std::endl;
-                outputFile << b[0][0] << "," << b[0][1] << "," << b[0][2] << "," << b[0][3] << "," <<
-                    b[1][0] << "," << b[1][1] << "," << b[1][2] << "," << b[1][3] << "," <<
-                    b[2][0] << "," << b[2][1] << "," << b[2][2] << "," << b[2][3] << "," <<
-                    b[3][0] << "," << b[3][1] << "," << b[3][2] << "," << b[3][3] << std::endl;
-            }
-        }
-        else if (line.find("四元数单位化") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-
-                Quaternion::CQuaternion c;
-                ss >> c.w >> comma >> c.x >> comma >> c.y >> comma >> c.z >> comma;
-                c = Quaternion::NormalizeQuaternion(c);
-                outputFile << "四元数单位化" << std::endl;
-                outputFile << c.w << "," << c.x << "," << c.y << "," <<c.z << std::endl;
-            }
-            }
-        else if (line.find("四元数插值") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-
-                Quaternion::CQuaternion c;
-                ss >> c.w >> comma >> c.x >> comma >> c.y >> comma >> c.z >> comma;
-                Quaternion::CQuaternion a;
-                ss >> a.w >> comma >> a.x >> comma >> a.y >> comma >> a.z >> comma;
-                float t;
-                ss >> t;
-                c = Quaternion::Slerp(a, c, t);
-                outputFile << "四元数插值" << std::endl;
-                outputFile << c.w << "," << c.x << "," << c.y << "," << c.z << std::endl;
-            }
-           }
-        else if (line.find("四元数相乘") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-
-                Quaternion::CQuaternion c;
-                ss >> c.w >> comma >> c.x >> comma >> c.y >> comma >> c.z >> comma;
-                Quaternion::CQuaternion a;
-                ss >> a.w >> comma >> a.x >> comma >> a.y >> comma >> a.z >> comma;
-
-                c = Quaternion::MultiplyQuaternions(a, c);
-                outputFile << "四元数相乘" << std::endl;
-                outputFile << c.w << "," << c.x << "," << c.y << "," << c.z << std::endl;
-            }
-            }
-        else if (line.find("四元数求差") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-
-                Quaternion::CQuaternion c;
-                ss >> c.w >> comma >> c.x >> comma >> c.y >> comma >> c.z >> comma;
-                Quaternion::CQuaternion a;
-                ss >> a.w >> comma >> a.x >> comma >> a.y >> comma >> a.z >> comma;
-
-                c = Quaternion::SubtractQuaternions(c, a);
-                outputFile << "四元数求差" << std::endl;
-                outputFile << c.w << "," << c.x << "," << c.y << "," << c.z << std::endl;
-            }
-            }
-        else if (line.find("四元数点乘") != std::string::npos) {
-                if (getline(inputFile, line)) {
-                    std::stringstream ss(line);
-                    char comma;
-                    Cmatrix::Mat4x4 b;
-
-                    Quaternion::CQuaternion c;
-                    ss >> c.w >> comma >> c.x >> comma >> c.y >> comma >> c.z >> comma;
-                    Quaternion::CQuaternion a;
-                    ss >> a.w >> comma >> a.x >> comma >> a.y >> comma >> a.z >> comma;
-   
-                    float res = Quaternion::DotProductQuaternions(c, a);
-                    outputFile << "四元数点乘" << std::endl;
-                    outputFile << res << std::endl;
-                }
-                }
-        else if (line.find("四元数求逆") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-
-                Quaternion::CQuaternion c;
-                ss >> c.w >> comma >> c.x >> comma >> c.y >> comma >> c.z >> comma;
-                c = Quaternion::InverseQuaternion(c);
-                outputFile << "四元数求逆" << std::endl;
-                outputFile << c.w << "," << c.x << "," << c.y << "," << c.z << std::endl;
-            }
-            }
-        else if (line.find("四元数求角度和旋转轴") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-
-                Quaternion::CQuaternion c;
-                ss >> c.w >> comma >> c.x >> comma >> c.y >> comma >> c.z >> comma;
-                std::pair<float, Cvector::CVector> res;
-                res = Quaternion::QuaternionToAxisAngle(c);
-                outputFile << "四元数求角度和旋转轴" << std::endl;
-                outputFile << res.first<<"\t";
-                Cvector::CVector a = res.second;
-                outputFile << a.x << "," << a.y << "," <<a.z  << std::endl;
-            }
-            }
-        else if (line.find("矩阵转换欧拉角") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-                ss >> b[0][0] >> comma >> b[0][1] >> comma >> b[0][2] >> comma >> b[0][3] >> comma
-                    >> b[1][0] >> comma >> b[1][1] >> comma >> b[1][2] >> comma >> b[1][3] >> comma
-                    >> b[2][0] >> comma >> b[2][1] >> comma >> b[2][2] >> comma >> b[2][3] >> comma
-                    >> b[3][0] >> comma >> b[3][1] >> comma >> b[3][2] >> comma >> b[3][3]; 
-
-                CRotator::CRotator a;
-                a = CRotator::MatrixToRotator(b);
-
-                outputFile << "矩阵转换欧拉角" << std::endl;
-                outputFile << a.Yaw << "," << a.Pitch << "," << a.Roll << "\n";
-
-   
-            }
-        }
-        else if (line.find("矩阵转换四元数") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-                ss >> b[0][0] >> comma >> b[0][1] >> comma >> b[0][2] >> comma >> b[0][3] >> comma
-                    >> b[1][0] >> comma >> b[1][1] >> comma >> b[1][2] >> comma >> b[1][3] >> comma
-                    >> b[2][0] >> comma >> b[2][1] >> comma >> b[2][2] >> comma >> b[2][3] >> comma
-                    >> b[3][0] >> comma >> b[3][1] >> comma >> b[3][2] >> comma >> b[3][3];
-
-                Quaternion::CQuaternion a;
-                a = Quaternion::MatrixToQuaternion(b);
-
-                outputFile << "矩阵转换四元数" << std::endl;
-                outputFile << a.w << "," << a.x << "," << a.y<<"," << a.z << "\n";
-
-
-            }
-        }
-        else if (line.find("矩阵正交化") != std::string::npos) {
-            if (getline(inputFile, line)) {
-                std::stringstream ss(line);
-                char comma;
-                Cmatrix::Mat4x4 b;
-                ss >> b[0][0] >> comma >> b[0][1] >> comma >> b[0][2] >> comma >> b[0][3] >> comma
-                    >> b[1][0] >> comma >> b[1][1] >> comma >> b[1][2] >> comma >> b[1][3] >> comma
-                    >> b[2][0] >> comma >> b[2][1] >> comma >> b[2][2] >> comma >> b[2][3] >> comma
-                    >> b[3][0] >> comma >> b[3][1] >> comma >> b[3][2] >> comma >> b[3][3];
-
-                b = Cmatrix::OrthogonalizeMatrix(b);
-
-                outputFile << "矩阵正交化" << std::endl;
-                outputFile << b[0][0] << "," << b[0][1] << "," << b[0][2] << "," << b[0][3] << "," <<
-                    b[1][0] << "," << b[1][1] << "," << b[1][2] << "," << b[1][3] << "," <<
-                    b[2][0] << "," << b[2][1] << "," << b[2][2] << "," << b[2][3] << "," <<
-                    b[3][0] << "," << b[3][1] << "," << b[3][2] << "," << b[3][3] << std::endl;
-
-            }
-            }
-    }
-
-    outputFile.close();
-    std::cout << "write done." << std::endl;
 }
 

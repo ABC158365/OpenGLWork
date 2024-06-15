@@ -10,10 +10,12 @@ uniform vec3 lightPos;
 uniform vec3 viewPos;
 uniform int type;
 uniform bool selected;
+uniform sampler2D texture0;
 
 in vec3 norm;
 in vec3 FragPos;
 in vec3 debugColor;
+
 void main()
 {   
     vec3 viewDir = normalize(viewPos - FragPos);
@@ -22,7 +24,7 @@ void main()
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     float res = spec + diffuse;
-    vec3 color = (type==0)?1-debugColor:debugColor;
+    vec3 color = texture(texture0, Tcoord).rgb;
     FragColor = color*(res+0.5);
     if(selected)buff1 = vec4(1.0, 0.0, 0.0, 1.0);
     else buff1 = vec4(0.0, 0.0, 0.0, 0.0);

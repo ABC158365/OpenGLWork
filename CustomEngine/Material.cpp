@@ -117,6 +117,8 @@ uint32_t Material::registerMaterial(const char* vertex, const char* frag) {
     
 }
 
+
+
 void Material::setBool(uint32_t ID, const std::string& name, bool value) {
     glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
 }
@@ -156,3 +158,57 @@ void  Material::readAfterBindTex(const char* file, bool isRGB, bool flip) {
     stbi_image_free(data);
 }
 
+void TextureManager::upLoadTexture(std::string objectRef, std::vector<std::string>& paths) {
+    Manager[objectRef].textures.resize(paths.size());
+    glGenTextures(Manager[objectRef].textures.size(), Manager[objectRef].textures.data());
+    int i = 0;
+    for (auto path : paths) {
+        int width, height, nrchannels;
+        stbi_set_flip_vertically_on_load(false);
+        unsigned char* data = stbi_load(path.c_str(), &width, &height, &nrchannels, 0);
+        if(data){
+            if (Manager.find(objectRef) == Manager.end()) {
+                TextureStorage a;
+                a.datas.push_back(data);
+                Manager[objectRef] = a;
+            }
+            else {
+                Manager[objectRef].datas.push_back(data);
+            }
+            glBindTexture(GL_TEXTURE_2D, Manager[objectRef].textures[i]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+            glGenerateMipmap(GL_TEXTURE_2D);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            i++;
+            stbi_image_free(data);
+        }
+        else {
+            printf("Error: %s\n", stbi_failure_reason());
+        }
+    }
+  
+}
+
+
+void TextureManager::destroyTexture(std::string objectRef) {
+    if (Manager.find(objectRef) != Manager.end()) {
+        for (auto data : Manager[objectRef].datas) {
+            stbi_image_free(data);
+        }
+    }
+}
+
+void TextureManager::BindTextures(std::string objectRef) {
+    if (Manager.find(objectRef) != Manager.end()) {
+        for (uint32_t i = 0; i < Manager[objectRef].textures.size(); i++) {
+            GLenum ref = GL_TEXTURE0 + i;
+            glActiveTexture(ref);
+            glBindTexture(GL_TEXTURE_2D, Manager[objectRef].textures[i]);
+            //glBindTexture(GL_TEXTURE_2D, 0);
+        }
+    }
+    
+}
