@@ -200,7 +200,8 @@ StaticMesh::StaticMesh(Cvector::CVector scale_, Cvector::CVector translate_, flo
 
     scale = scale_;
     rotation = CRotator::CRotator(0, yaw_, 0);
-    
+    texIndex = 0;
+    CtexIndex = -1;
     translate = translate_;
     abstranslate = translate_;
 
@@ -217,6 +218,23 @@ StaticMesh::StaticMesh(std::string file_path, uint32_t matID_) {
     getVerteciesInfo(vertices, file_path);
     bindBuffers();
 
+}
+
+void StaticMesh::setCubeUV(int face, float lbu, float lbv, float rbu, float rbv, float rtu, float rtv,
+    float ltu, float ltv) {
+    vertices[face * 8* 6 + 3] = lbu;
+    vertices[face * 8* 6 + 4] = lbv;
+    vertices[face * 8* 6+  11] = rbu;
+    vertices[face * 8* 6 + 12] = rbv;
+    vertices[face * 8 * 6 + 19] = rtu;
+    vertices[face * 8* 6 + 20] = rtv;
+    vertices[face * 8 * 6 + 27] = rtu;
+    vertices[face * 8 * 6 + 28] = rtv;
+    vertices[face * 8 * 6 + 35] = ltu;
+    vertices[face * 8 * 6 + 36] = ltv;
+    vertices[face * 8 * 6 + 43] = lbu;
+    vertices[face * 8 * 6 + 44] = lbv;
+    updateBuffers(false);
 }
 
 void StaticMesh::getVertices(bool ForceUpdateCollider, std::vector<float>& fv) {
@@ -320,6 +338,22 @@ void StaticMesh::draw(Camera* cam, Cvector::CVector color) {
     Material::setFloat(matID, "offset", green / 4);
     glUniform4f(a, 0.0f, green, 0.0f, 1.0f);
     Material::setFloat(matID, "par", (green + 1) / 2.0);
+
+       
+    Material::setInt(matID, "CtexIndex", CtexIndex);
+    Material::setInt(matID, "texIndex", texIndex);
+    Material::setInt(matID, "texture0", 0);
+    Material::setInt(matID, "texture1", 1);
+    Material::setInt(matID, "texture2", 2);
+    Material::setInt(matID, "texture3", 3);
+    Material::setInt(matID, "texture4", 4);
+    if (CtexIndex >= 0) {
+        for (int i = 5; i < 20; i++) {
+            Material::setInt(matID, ("texture" + std::to_string(i)).c_str(), i);
+        }
+    }
+   
+
     if (selected == true)
     {
         Material::setBool(matID, "selected", true);

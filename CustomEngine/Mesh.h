@@ -185,10 +185,17 @@ private:
 
 class StaticMesh :public Mesh {
 public:
+    int texIndex;
+    int CtexIndex;
+
     StaticMesh(Cvector::CVector scale, Cvector::CVector translate, float yaw, uint32_t matID);
     StaticMesh(std::string file_path, uint32_t matID_);
+    
     virtual void getVertices(bool ForceUpdateCollider, std::vector<float>& fv);
 
+    void setCubeUV(int face, float lbu, float lbv, float rbu, float rbv, float rtu, float rtv,
+        float ltu, float ltv
+    );
     void updateBuffers(bool forceUpdateCollider);
 	void bindBuffers();
 	void draw(Camera* cam, Cvector::CVector color);
@@ -197,6 +204,7 @@ public:
 	};
 
 };
+
 
 class Actor;
 

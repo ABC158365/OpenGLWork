@@ -189,12 +189,41 @@ int main(int, char**)
     regionC.SpawnMember();
     TextureManager UTextureManager;
     std::vector<std::string> tpaths;
-    tpaths.push_back("./container.jpg");
+    tpaths.push_back("./texture/A.jpg");
  
     UTextureManager.upLoadTexture("regionA", tpaths);
     tpaths.clear();
     tpaths.push_back("./test.jpg");
     UTextureManager.upLoadTexture("regionB", tpaths);
+
+    tpaths.clear();
+    tpaths.push_back("./texture/C1_1.jpg");
+    tpaths.push_back("./texture/C1_2.jpg");
+    tpaths.push_back("./texture/C1_3.jpg");
+    tpaths.push_back("./texture/C1_4.jpg");
+    UTextureManager.upLoadTexture("regionC", tpaths);
+
+    tpaths.clear();
+    tpaths.push_back("./test.jpg");
+    tpaths.push_back("./texture/B1_1L.jpg");
+    tpaths.push_back("./texture/B1_2L.jpg");
+    tpaths.push_back("./texture/B1_3L.jpg");
+    tpaths.push_back("./texture/B1_4L.jpg");
+    tpaths.push_back("./texture/B1_5L.jpg");
+    tpaths.push_back("./texture/B1_6L.jpg");
+    tpaths.push_back("./texture/B1_7L.jpg");
+    tpaths.push_back("./texture/B1_8L.jpg");
+    tpaths.push_back("./texture/B1_9L.jpg");
+    tpaths.push_back("./texture/B1_1R.jpg");
+    tpaths.push_back("./texture/B1_2R.jpg");
+    tpaths.push_back("./texture/B1_3R.jpg");
+    tpaths.push_back("./texture/B1_4R.jpg");
+    tpaths.push_back("./texture/B1_5R.jpg");
+    tpaths.push_back("./texture/B1_6R.jpg");
+    tpaths.push_back("./texture/B1_7R.jpg");
+    tpaths.push_back("./texture/B1_8R.jpg");
+    tpaths.push_back("./texture/B1_9R.jpg");
+    UTextureManager.upLoadTexture("regionB1", tpaths);
 
     float r = 5;
     Scene scene;
@@ -625,10 +654,11 @@ int main(int, char**)
         glStencilFunc(GL_ALWAYS, 255, 255);
         UTextureManager.BindTextures("regionA");
         regionA.drawmeshes(currentCam);
-        UTextureManager.BindTextures("regionB");
+        UTextureManager.BindTextures("regionB1");
         regionB1.drawmeshes(currentCam);
        
         regionB2.drawmeshes(currentCam);
+        UTextureManager.BindTextures("regionC");
         regionC.drawmeshes(currentCam);
 
         //actor00.setRotation(CRotator::CRotator(0.0, glfwGetTime(), 0.0));
