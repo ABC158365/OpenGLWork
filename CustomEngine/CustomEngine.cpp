@@ -43,6 +43,8 @@
 #include "Scene.h"
 #include "PostProcessing.h"
 #include "BufferManager.h"
+#include "Font.h"
+#include "Noise.h"
 
 void processInput(GLFWwindow* window, Camera* camera);
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
@@ -172,6 +174,10 @@ int main(int, char**)
         return -1;
     }
 
+    Font myFont(1080, 720);
+    PerlinNoise2D noise;
+
+    std::cout << "Preparing Shaders..\n";
     //InstancedCube cube("./vertex1.glsl", "./fragment.glsl");
     GridPlane plane("./debugGridv.glsl", "./debugGridf.glsl");
     RegionA regionA;
@@ -192,9 +198,13 @@ int main(int, char**)
     tpaths.push_back("./texture/A.jpg");
  
     UTextureManager.upLoadTexture("regionA", tpaths);
+
     tpaths.clear();
-    tpaths.push_back("./test.jpg");
-    UTextureManager.upLoadTexture("regionB", tpaths);
+    tpaths.push_back("./texture/Custom/A.jpg");
+    UTextureManager.upLoadTexture("regionA_0", tpaths);
+    tpaths.clear();
+    //tpaths.push_back("./test.jpg");
+    //UTextureManager.upLoadTexture("regionB", tpaths);
 
     tpaths.clear();
     tpaths.push_back("./texture/C1_1.jpg");
@@ -204,26 +214,127 @@ int main(int, char**)
     UTextureManager.upLoadTexture("regionC", tpaths);
 
     tpaths.clear();
-    tpaths.push_back("./test.jpg");
-    tpaths.push_back("./texture/B1_1L.jpg");
-    tpaths.push_back("./texture/B1_2L.jpg");
-    tpaths.push_back("./texture/B1_3L.jpg");
-    tpaths.push_back("./texture/B1_4L.jpg");
-    tpaths.push_back("./texture/B1_5L.jpg");
-    tpaths.push_back("./texture/B1_6L.jpg");
-    tpaths.push_back("./texture/B1_7L.jpg");
-    tpaths.push_back("./texture/B1_8L.jpg");
-    tpaths.push_back("./texture/B1_9L.jpg");
-    tpaths.push_back("./texture/B1_1R.jpg");
-    tpaths.push_back("./texture/B1_2R.jpg");
-    tpaths.push_back("./texture/B1_3R.jpg");
-    tpaths.push_back("./texture/B1_4R.jpg");
-    tpaths.push_back("./texture/B1_5R.jpg");
-    tpaths.push_back("./texture/B1_6R.jpg");
-    tpaths.push_back("./texture/B1_7R.jpg");
-    tpaths.push_back("./texture/B1_8R.jpg");
-    tpaths.push_back("./texture/B1_9R.jpg");
+    tpaths.push_back("./texture/Custom/C1_1.jpg");
+    tpaths.push_back("./texture/Custom/C1_2.jpg");
+    tpaths.push_back("./texture/Custom/C1_3.jpg");
+    tpaths.push_back("./texture/Custom/C1_4.jpg");
+    UTextureManager.upLoadTexture("regionC_0", tpaths);
+
+    tpaths.clear(); 
+    {
+        tpaths.push_back("./texture/BT.jpg");
+        tpaths.push_back("./texture/B1_1L.jpg");
+        tpaths.push_back("./texture/B1_2L.jpg");
+        tpaths.push_back("./texture/B1_3L.jpg");
+        tpaths.push_back("./texture/B1_4L.jpg");
+        tpaths.push_back("./texture/B1_5L.jpg");
+        tpaths.push_back("./texture/B1_6L.jpg");
+        tpaths.push_back("./texture/B1_7L.jpg");
+        tpaths.push_back("./texture/B1_8L.jpg");
+        tpaths.push_back("./texture/B1_9L.jpg");
+        tpaths.push_back("./texture/B1_1R.jpg");
+        tpaths.push_back("./texture/B1_2R.jpg");
+        tpaths.push_back("./texture/B1_3R.jpg");
+        tpaths.push_back("./texture/B1_4R.jpg");
+        tpaths.push_back("./texture/B1_5R.jpg");
+        tpaths.push_back("./texture/B1_6R.jpg");
+        tpaths.push_back("./texture/B1_7R.jpg");
+        tpaths.push_back("./texture/B1_8R.jpg");
+        tpaths.push_back("./texture/B1_9R.jpg");
+        tpaths.push_back("./texture/B1_1F-项目.jpg");
+        tpaths.push_back("./texture/B1_2F-项目.jpg");
+        tpaths.push_back("./texture/B1_3F-项目.jpg");
+        tpaths.push_back("./texture/B1_4F-项目.jpg");
+        tpaths.push_back("./texture/B1_5F-项目.jpg");
+        tpaths.push_back("./texture/B1_6F-项目.jpg");
+        tpaths.push_back("./texture/B1_7F-项目.jpg");
+        tpaths.push_back("./texture/B1_8F-项目.jpg");
+        tpaths.push_back("./texture/B1_9F-项目.jpg");
+        tpaths.push_back("./texture/B1_10F-项目.jpg");
+
+    }
     UTextureManager.upLoadTexture("regionB1", tpaths);
+
+    tpaths.clear();
+    {
+        tpaths.push_back("./texture/Custom/BT.jpg");
+        tpaths.push_back("./texture/Custom/B1_1L.jpg");
+        tpaths.push_back("./texture/Custom/B1_2L.jpg");
+        tpaths.push_back("./texture/Custom/B1_3L.jpg");
+        tpaths.push_back("./texture/Custom/B1_4L.jpg");
+        tpaths.push_back("./texture/Custom/B1_5L.jpg");
+        tpaths.push_back("./texture/Custom/B1_6L.jpg");
+        tpaths.push_back("./texture/Custom/B1_7L.jpg");
+        tpaths.push_back("./texture/Custom/B1_8L.jpg");
+        tpaths.push_back("./texture/Custom/B1_9L.jpg");
+        tpaths.push_back("./texture/Custom/B1_1R.jpg");
+        tpaths.push_back("./texture/Custom/B1_2R.jpg");
+        tpaths.push_back("./texture/Custom/B1_3R.jpg");
+        tpaths.push_back("./texture/Custom/B1_4R.jpg");
+        tpaths.push_back("./texture/Custom/B1_5R.jpg");
+        tpaths.push_back("./texture/Custom/B1_6R.jpg");
+        tpaths.push_back("./texture/Custom/B1_7R.jpg");
+        tpaths.push_back("./texture/Custom/B1_8R.jpg");
+        tpaths.push_back("./texture/Custom/B1_9R.jpg");
+        tpaths.push_back("./texture/Custom/B1_1F-项目.jpg");
+        tpaths.push_back("./texture/Custom/B1_2F-项目.jpg");
+        tpaths.push_back("./texture/Custom/B1_3F-项目.jpg");
+        tpaths.push_back("./texture/Custom/B1_4F-项目.jpg");
+        tpaths.push_back("./texture/Custom/B1_5F-项目.jpg");
+        tpaths.push_back("./texture/Custom/B1_6F-项目.jpg");
+        tpaths.push_back("./texture/Custom/B1_7F-项目.jpg");
+        tpaths.push_back("./texture/Custom/B1_8F-项目.jpg");
+        tpaths.push_back("./texture/Custom/B1_9F-项目.jpg");
+        tpaths.push_back("./texture/Custom/B1_10F-项目.jpg");
+
+    }
+    UTextureManager.upLoadTexture("regionB1_0", tpaths);
+
+    tpaths.clear();
+    tpaths.push_back("./texture/Custom/steve.jpg");
+    UTextureManager.upLoadTexture("Actor", tpaths);
+
+    tpaths.clear();
+    tpaths.push_back("./texture/B2T.jpg");
+    for (size_t i = 0; i < 15; i++)
+    {
+        if (i != 0 && i != 14)continue;
+        tpaths.push_back(std::string("./texture/B2_")+std::to_string(i+1) + "L-项目.jpg");
+
+    }
+    for (size_t i = 0; i < 15; i++)
+    {
+        if (i != 0 && i != 14)continue;
+        tpaths.push_back(std::string("./texture/B2_") + std::to_string(i + 1) + "R-项目.jpg");
+    }
+    for (size_t i = 0; i < 4; i++)
+    {
+        tpaths.push_back(std::string("./texture/B2_") + std::to_string(i + 1) + "F-项目.jpg");
+    }
+
+    UTextureManager.upLoadTexture("regionB2", tpaths);
+
+    tpaths.clear();
+    tpaths.push_back("./texture/Custom/B2T.jpg");
+    for (size_t i = 0; i < 15; i++)
+    {
+        if (i != 0 && i != 14)continue;
+        tpaths.push_back(std::string("./texture/Custom/B2_") + std::to_string(i + 1) + "L-项目.jpg");
+
+    }
+    for (size_t i = 0; i < 15; i++)
+    {
+        if (i != 0 && i != 14)continue;
+        tpaths.push_back(std::string("./texture/Custom/B2_") + std::to_string(i + 1) + "R-项目.jpg");
+    }
+    for (size_t i = 0; i < 4; i++)
+    {
+        tpaths.push_back(std::string("./texture/Custom/B2_") + std::to_string(i + 1) + "F-项目.jpg");
+    }
+
+    UTextureManager.upLoadTexture("regionB2_0", tpaths);
+
+    std::cout << "Loading Scene..\n";
 
     float r = 5;
     Scene scene;
@@ -276,8 +387,8 @@ int main(int, char**)
     glClearColor(0.2f, 0.2f, 0.3f, 1.0f);
 
     glViewport(0, 0, 1280, 720);
-    //glEnable(GL_BLEND); //开混合模式贴图
-    //glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND); //开混合模式贴图
+    glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
     glEnable(GL_DEPTH_TEST);
     
@@ -289,7 +400,10 @@ int main(int, char**)
     bool key1 = false;
     bool camState = false;
     bool keyf2 = false;
+    bool isReplaceTexture = false;
     bool keyf3 = false;
+
+    bool keyf3toggle = false;
     bool key3 = false;
     bool key4 = false;
 
@@ -315,6 +429,9 @@ int main(int, char**)
     float lastX;
     float lastY;
    
+    std::vector<std::string> infos;
+    infos.clear();
+
     lastX = 0;
     lastY = 0;
     while (!glfwWindowShouldClose(window))
@@ -502,69 +619,15 @@ int main(int, char**)
                 sActor = false;
             }
        }
-        //save module
-
+        //tex module
         if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_PRESS) {
             keyf2 = true;
         }
         if (glfwGetKey(window, GLFW_KEY_F2) == GLFW_RELEASE && keyf2) {
+
+            isReplaceTexture = !isReplaceTexture;
             keyf2 = false;
-            std::ofstream outputFile("Scene.txt");
-            if (!outputFile.is_open()) {
-                std::cerr << "Failed to open the file." << std::endl;
-                return 1;
-            }
-            for (int i = 0; i < scene.meshManager.size(); i++) {
-                outputFile << i << " " << scene.meshManager[i]->scale.x << ',' << scene.meshManager[i]->scale.y << ',' << scene.meshManager[i]->scale.z << " " <<
-                    scene.meshManager[i]->translate.x << ',' << scene.meshManager[i]->translate.y << ',' << scene. meshManager[i]->translate.z << " " <<
-                    scene.meshManager[i]->rotation.Yaw << "\n";
-                
-            }
-            outputFile.close();
-            std::cout << "save done.";
-        }
-
-        if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS) {
-            keyf3 = true;
-        }
-        if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_RELEASE && keyf3) {
-            keyf3 = false;
-            std::ifstream inputFile("Scene.txt");
-
-            if (!inputFile.is_open()) {
-                std::cout << "无法打开文件" << std::endl;
-            }
-            else {
-                int index;
-                Cvector::CVector scale;
-                Cvector::CVector translate;
-                float yaw;
-                std::string line;
-                while (getline(inputFile, line)) {
-                    std::stringstream ss(line);
-                    ss >> index;
-                    if (ss.fail()) {
-                        std::cerr << "Error parsing int value." << std::endl;
-                        return 1;
-                    }
-                    char comma;
-                    ss >> scale.x >> comma >> scale.y >> comma >> scale.z;
-                    ss >> translate.x >> comma >> translate.y >> comma >> translate.z;
-                    ss >> yaw;
-
-                    if (index >= scene.meshManager.size())std::cout << "warning::invalid scene file";
-                    else {
-    
-                        scene.meshManager[index]->rotation.Yaw = yaw;
-                        scene.meshManager[index]->scale = scale;
-                        scene.meshManager[index]->translate = translate;
-                        StaticMesh* temp = dynamic_cast<StaticMesh*>(scene.meshManager[index]);
-                        temp->updateBuffers(true);
-                    }
-                }
-            }
-            std::cout << "read done.";
-        }
+        };
 
         
         if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
@@ -602,13 +665,20 @@ int main(int, char**)
                 }
             }
         }
+
+ 
+
         if (count % 50 == 0) {
             count = 0;
+            infos.clear();
             for (auto m : scene.meshManager) {
                 SkeletalMesh* temp = dynamic_cast<SkeletalMesh*>(m);
                 if (temp) {
                     for (auto other : scene.staticMeshes) {
-                        temp->intersectionEvent(other);
+                        std::string res = temp->intersectionEvent(other);
+                        if (res != "-1") {
+                            infos.push_back(res);
+                        }
                     }
                 }
             }
@@ -644,7 +714,23 @@ int main(int, char**)
             camera01->targetPos = temp->root->getTranslate() + Cvector::CVector(0, 4, 0);
         }
 
-      
+
+        if (sActor && glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            SkeletalMesh* temp = dynamic_cast<SkeletalMesh*>(currentMesh);
+
+            Cvector::CVector f = CRotator::getForwardVector(temp->root->getRotator());
+            Cvector::CVector t = temp->root->getTranslate();
+            temp->root->setTranslate(t + f * 0.1);
+
+        }
+        if (sActor && glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            SkeletalMesh* temp = dynamic_cast<SkeletalMesh*>(currentMesh);
+
+            Cvector::CVector f = CRotator::getForwardVector(temp->root->getRotator());
+            Cvector::CVector t = temp->root->getTranslate();
+            temp->root->setTranslate(t - f * 0.1);
+
+        }
   
 
         //glUseProgram(shaderProgram1);
@@ -652,29 +738,76 @@ int main(int, char**)
         //glDrawArrays(GL_TRIANGLES, 0, 3);
         
         glStencilFunc(GL_ALWAYS, 255, 255);
-        UTextureManager.BindTextures("regionA");
+        if (isReplaceTexture) {
+            UTextureManager.BindTextures("regionA_0");
+        }
+        else {
+            UTextureManager.BindTextures("regionA");
+        }
+     
         regionA.drawmeshes(currentCam);
-        UTextureManager.BindTextures("regionB1");
+        if (isReplaceTexture) {
+            UTextureManager.BindTextures("regionB1_0");
+        }
+        else {
+            UTextureManager.BindTextures("regionB1");
+        }
+        
         regionB1.drawmeshes(currentCam);
-       
+        if (isReplaceTexture) {
+            UTextureManager.BindTextures("regionB2_0");
+        }
+        else {
+            UTextureManager.BindTextures("regionB2");
+        }
+
         regionB2.drawmeshes(currentCam);
-        UTextureManager.BindTextures("regionC");
+        if (isReplaceTexture) {
+            UTextureManager.BindTextures("regionC_0");
+        }
+        else {
+            UTextureManager.BindTextures("regionC");
+        }
         regionC.drawmeshes(currentCam);
 
         //actor00.setRotation(CRotator::CRotator(0.0, glfwGetTime(), 0.0));
         //actor00.updateBuffer();
         //actor00.draw(&camera);
-        if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
-            key7 = true;
+        //if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
+        //    key7 = true;
+        //}
+        //if (glfwGetKey(window, GLFW_KEY_7) == GLFW_RELEASE && key7) {
+        //    key7 = false;
+        //    key7toggle = !key7toggle;
+        //}
+
+        //if(key7toggle)
+        //{   
+        //    timer += io.DeltaTime;
+        //    r = 3 * (sin(timer) + 2);
+        //    int i = 0;
+        //    for (auto a : scene.actors) {
+        //        a->leftLeg->rotation = CRotator::CRotator(sin(glfwGetTime() * 2), 0, 0);
+        //        a->rightLeg->rotation = CRotator::CRotator(-sin(glfwGetTime() * 2), 0, 0);
+        //        a->leftArm->rotation = CRotator::CRotator(-sin(glfwGetTime() * 2), 0, 0);
+        //        a->rightArm->rotation = CRotator::CRotator(sin(glfwGetTime() * 2), 0, 0);
+        //        a->setTranslate(Cvector::CVector(cos(Cmath::radians(30 * i)) * r, 5.f, sin(Cmath::radians(30 * i)) * r + 5));
+        //        i++;
+        //    }
+        //}
+
+        if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_PRESS) {
+            keyf3 = true;
         }
-        if (glfwGetKey(window, GLFW_KEY_7) == GLFW_RELEASE && key7) {
-            key7 = false;
-            key7toggle = !key7toggle;
+        if (glfwGetKey(window, GLFW_KEY_F3) == GLFW_RELEASE && keyf3) {
+            keyf3 = false;
+            keyf3toggle = !keyf3toggle;
         }
 
-        if(key7toggle)
-        {   
+        if (keyf3toggle)
+        {
             timer += io.DeltaTime;
+
             r = 3 * (sin(timer) + 2);
             int i = 0;
             for (auto a : scene.actors) {
@@ -682,23 +815,46 @@ int main(int, char**)
                 a->rightLeg->rotation = CRotator::CRotator(-sin(glfwGetTime() * 2), 0, 0);
                 a->leftArm->rotation = CRotator::CRotator(-sin(glfwGetTime() * 2), 0, 0);
                 a->rightArm->rotation = CRotator::CRotator(sin(glfwGetTime() * 2), 0, 0);
-                a->setTranslate(Cvector::CVector(cos(Cmath::radians(30 * i)) * r, 5.f, sin(Cmath::radians(30 * i)) * r + 5));
+
+                float r1 = noise.BasePerlinNoise2D(i*125-123 + cos(r), i * 234 - 2 + cos(r)) + 1;
+                float r2 = noise.BasePerlinNoise2D(i * 167.5754 - 19324.2 + cos(r) , i * 245.3 - 2 + cos(r) ) + 1;
+                a->setTranslate(Cvector::CVector(cos(Cmath::radians(30 * i)) * r1 * 4.5, 5.f, sin(Cmath::radians(30 * i)) * r2* 4.5 + 5));
                 i++;
             }
         }
+ 
 
+        UTextureManager.BindTextures("Actor");
 
         scene.updateBuffers();
         scene.draw(currentCam);
   
 
+        
         glStencilMask(0xFF); //最后记得打开，因为clear需要清零
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
 
+
+        
+
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glStencilFunc(GL_ALWAYS, 0, 0);
+        
+        for (int i = 0; i < infos.size() && i < 5; i++) {
+            myFont.RenderText(infos[i], 800.0f, 100.0f + 30*i, 0.3f, glm::vec3(0.3, 0.7f, 0.9f));
+        }
 
+       
+       
+
+  
         postRender.render(renderBuffer->tex, renderBuffer->customTex, renderBuffer->stencilTex);
+
+
+        glDisable(GL_BLEND);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         glfwSwapBuffers(window);

@@ -13,6 +13,7 @@ void RegionA::SpawnMember() {
 		
 		StaticMesh* renderCube = new StaticMesh(Cvector::CVector(1., 12., 1.), Cvector::CVector(x, 6, y), Cmath::pi<float>() / 4 - perangle * i ,mat);
 		renderCube->setCubeUV(0, (i+1) * 1.0 / 29, 1, (i) * 1.0 / 29, 1, (i) * 1.0 / 29, 0, (i+1) * 1.0 / 29, 0);
+		renderCube->type = -1;
 		meshes.push_back(renderCube);
 	}
 }
@@ -31,9 +32,31 @@ void RegionB1::SpawnMember() {
 			StaticMesh* renderCube = new StaticMesh(Cvector::CVector(0.9, 5.0, 0.99), Cvector::CVector(i - 4.5, 2.5, j), 0.0,  mat);
 			renderCube->CtexIndex = 8-i;
 			renderCube->texIndex = j;
-			
-			
+			int jt = 10 - j;
+			renderCube->setCubeUV(3, 1.0*(jt-1)/10, 0, 1.0*(jt)/10, 0, 1.0 * (jt) / 10, 1, 1.0 * (jt-1) / 10, 1);
+			jt = 10 - jt +1;
+			renderCube->setCubeUV(2, 1.0 * (jt) / 10, 0, 1.0 * (jt - 1) / 10, 0, 1.0 * (jt - 1) / 10, 1, 1.0 * (jt) / 10, 1);
+			int it = 9 - i;
 
+
+			renderCube->setCubeUV(0, 
+				
+				1.0 * (it) / 9, 1, 
+				1.0 * (it - 1) / 9, 1,
+				1.0 * (it - 1) / 9, 0,
+				1.0 * (it) / 9, 0
+				
+				);
+
+			it = 8 - i;
+			jt = 9 - j;
+			renderCube->setCubeUV(5,	 
+										(it + 1.0) / 9, (jt +1.0)/10,
+										it * 1.0 / 9,(jt + 1.0) / 10,
+										it * 1.0 / 9, jt * 1.0 / 10,
+										(it + 1.0) / 9, jt * 1.0 / 10
+				);
+			renderCube->type = 0;
 			meshes.push_back(renderCube);
 		}
 
@@ -51,6 +74,24 @@ void RegionB2::SpawnMember(){
 			//cmat = trans * cmat;
 			//glm::mat4x4 mat = getMatfromCmat(cmat);
 			StaticMesh* renderCube = new StaticMesh(Cvector::CVector(0.9, 3., 0.99), Cvector::CVector(i - 7.5, 1.5, j) + center, 0.0, mat);
+			renderCube->type = 1;
+			renderCube->CtexIndex = 14 - i;
+			renderCube->texIndex = j;
+			int jt = 4 - j;
+			renderCube->setCubeUV(3, 1.0 * (jt - 1) / 4, 0, 1.0 * (jt) / 4, 0, 1.0 * (jt) / 4, 1, 1.0 * (jt - 1) / 4, 1);
+			jt = 4 - jt + 1;
+			renderCube->setCubeUV(2, 1.0 * (jt) / 4, 0, 1.0 * (jt - 1) / 4, 0, 1.0 * (jt - 1) / 4, 1, 1.0 * (jt) / 4, 1);
+			renderCube->setCubeUV(0, 1.0 * (i) / 15, 1, 1.0 * (i - 1) / 15, 1, 1.0 * (i - 1) / 15, 0, 1.0 * (i) / 15, 0);
+
+			int it = 14 - i;
+			jt = 3 - j;
+			renderCube->setCubeUV(5,
+				(it + 1.0) / 15, (jt + 1.0) / 4,
+				it * 1.0 / 15, (jt + 1.0) / 4,
+				it * 1.0 / 15, jt * 1.0 / 4,
+				(it + 1.0) / 15, jt * 1.0 / 4
+			);
+			
 			meshes.push_back(renderCube);
 		}
 

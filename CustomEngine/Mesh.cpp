@@ -174,12 +174,12 @@ StaticMesh::StaticMesh(Cvector::CVector scale_, Cvector::CVector translate_, flo
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,  0.0f, -1.0f,  0.0f,
         -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,  0.0f, -1.0f,  0.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 0.0f,  0.0f,  1.0f,  0.0f,
             };
 
    /* for (int i = 0; i < 36; i++) {
@@ -200,6 +200,7 @@ StaticMesh::StaticMesh(Cvector::CVector scale_, Cvector::CVector translate_, flo
 
     scale = scale_;
     rotation = CRotator::CRotator(0, yaw_, 0);
+    type = -1;
     texIndex = 0;
     CtexIndex = -1;
     translate = translate_;
@@ -214,6 +215,7 @@ StaticMesh::StaticMesh(Cvector::CVector scale_, Cvector::CVector translate_, flo
 }
 
 StaticMesh::StaticMesh(std::string file_path, uint32_t matID_) {
+    type = -2;
     matID = matID_;
     getVerteciesInfo(vertices, file_path);
     bindBuffers();
@@ -342,13 +344,14 @@ void StaticMesh::draw(Camera* cam, Cvector::CVector color) {
        
     Material::setInt(matID, "CtexIndex", CtexIndex);
     Material::setInt(matID, "texIndex", texIndex);
+    Material::setInt(matID, "Selector", type);
     Material::setInt(matID, "texture0", 0);
     Material::setInt(matID, "texture1", 1);
     Material::setInt(matID, "texture2", 2);
     Material::setInt(matID, "texture3", 3);
     Material::setInt(matID, "texture4", 4);
     if (CtexIndex >= 0) {
-        for (int i = 5; i < 20; i++) {
+        for (int i = 5; i < 31; i++) {
             Material::setInt(matID, ("texture" + std::to_string(i)).c_str(), i);
         }
     }
@@ -489,10 +492,11 @@ void Actor::markSelect() {
 }
 
 
-void SkeletalMesh::intersectionEvent(Mesh* other) {
+std::string SkeletalMesh::intersectionEvent(Mesh* other) {
     if (boxIntersection(other)) {
-        std::cout << "Åö×²ÐÅÏ¢£º" << other->parent << "--" << root->name << "\n";
+        return "Collision Info£º" + other->parent + "--" + root->name + "\n";
     }
+    return "-1";
 }
 
 void SkeletalMesh::getVertices(bool ForceUpdateCollider, std::vector<float>& fv) {

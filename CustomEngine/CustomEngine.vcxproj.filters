@@ -96,6 +96,12 @@
     <ClCompile Include="CQuaternion.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Noise.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shaders.h">
@@ -152,6 +158,12 @@
     <ClInclude Include="CQuaternion.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Noise.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment2.glsl">
@@ -200,6 +212,12 @@
       <Filter>资源文件\shaders</Filter>
     </None>
     <None Include="shader\StaticMeshV.glsl">
+      <Filter>资源文件\shaders</Filter>
+    </None>
+    <None Include="fontV.glsl">
+      <Filter>资源文件\shaders</Filter>
+    </None>
+    <None Include="fontF.glsl">
       <Filter>资源文件\shaders</Filter>
     </None>
   </ItemGroup>

@@ -1,6 +1,6 @@
  #version 440 core
 in vec2 TexCoords;
-    out vec4 FragColor;
+layout (location = 0)out vec4 FragColor;
 layout (binding=0) uniform sampler2D  albedo;
 layout (binding=1) uniform sampler2D buff;
 layout (binding=2) uniform usampler2D stencil;

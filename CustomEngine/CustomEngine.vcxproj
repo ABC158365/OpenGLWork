@@ -71,11 +71,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)depend\GLAD\include;$(SolutionDir)depend\GLFW\include;$(SolutionDir)depend\imgui;$(SolutionDir)depend\imgui\backends;$(SolutionDir)depend\glm;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)depend\GLAD\include;$(SolutionDir)depend\GLFW\include;$(SolutionDir)depend\imgui;$(SolutionDir)depend\imgui\backends;$(SolutionDir)depend\glm;$(SolutionDir)depend\FreeType;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\depend\GLFW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>$(SolutionDir)depend\GLAD\include;$(SolutionDir)depend\GLFW\include;$(SolutionDir)depend\imgui;$(SolutionDir)depend\imgui\backends;$(SolutionDir)depend\glm;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)depend\GLAD\include;$(SolutionDir)depend\GLFW\include;$(SolutionDir)depend\imgui;$(SolutionDir)depend\imgui\backends;$(SolutionDir)depend\glm;$(SolutionDir)depend\FreeType;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\depend\GLFW\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -117,7 +117,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;$(SolutionDir)depend\FreeType\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -135,7 +135,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;$(SolutionDir)depend\FreeType\freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -158,8 +158,10 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="CustomEngine.cpp" />
     <ClCompile Include="CVector.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Noise.cpp" />
     <ClCompile Include="PostProcessing.cpp" />
     <ClCompile Include="Render.cpp" />
     <ClCompile Include="Scene.cpp" />
@@ -177,8 +179,10 @@
     <ClInclude Include="CRotator.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="CVector.h" />
+    <ClInclude Include="Font.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Noise.h" />
     <ClInclude Include="PostProcessing.h" />
     <ClInclude Include="Render.h" />
     <ClInclude Include="Scene.h" />
@@ -191,6 +195,8 @@
     <None Include="computeCell.glsl" />
     <None Include="debugGridf.glsl" />
     <None Include="debugGridv.glsl" />
+    <None Include="fontF.glsl" />
+    <None Include="fontV.glsl" />
     <None Include="fragment.glsl" />
     <None Include="fragment2.glsl" />
     <None Include="frameCubeF.glsl" />

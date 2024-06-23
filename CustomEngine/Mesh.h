@@ -141,8 +141,8 @@ public:
             abs(delta.y) < size.y &&
             abs(delta.z) < size.z
             ) {
-            std::cout << "(" << boundsMin.x << "," << boundsMin.y << "," << boundsMin.z << ")" << "(" << boundsMax.x << "," << boundsMax.y << "," << boundsMax.z << ")";
-            std::cout << "(" << other->boundsMin.x << "," << other->boundsMin.y << "," << other->boundsMin.z << ")" << "(" << other->boundsMax.x << "," << other->boundsMax.y << "," << other->boundsMax.z << ")";
+            //std::cout << "(" << boundsMin.x << "," << boundsMin.y << "," << boundsMin.z << ")" << "(" << boundsMax.x << "," << boundsMax.y << "," << boundsMax.z << ")";
+            //std::cout << "(" << other->boundsMin.x << "," << other->boundsMin.y << "," << other->boundsMin.z << ")" << "(" << other->boundsMax.x << "," << other->boundsMax.y << "," << other->boundsMax.z << ")";
 
             return true;
         }
@@ -187,6 +187,7 @@ class StaticMesh :public Mesh {
 public:
     int texIndex;
     int CtexIndex;
+    int type;
 
     StaticMesh(Cvector::CVector scale, Cvector::CVector translate, float yaw, uint32_t matID);
     StaticMesh(std::string file_path, uint32_t matID_);
@@ -215,7 +216,7 @@ public:
     SkeletalMesh(Cvector::CVector scale, Cvector::CVector translate, float yaw, uint32_t matI, Actor* root_) :StaticMesh(scale, translate, yaw, matI) { root = root_; skeletonRot = CRotator::getRotationMatrix(0.0, yaw, 0.0); };
     SkeletalMesh(std::string file_path, uint32_t matID_, Actor* root_) :StaticMesh(file_path, matID_) { root = root_; skeletonRot = Cmatrix::Mat4x4(); };
     
-    void intersectionEvent(Mesh* other);
+    std::string intersectionEvent(Mesh* other);
 
     virtual void getVertices(bool ForceUpdateCollider, std::vector<float>& fv);
     void updateBuffers(bool forceUpdateCollider) { StaticMesh::updateBuffers(forceUpdateCollider); };
@@ -255,6 +256,7 @@ public:
     void setRotation(CRotator::CRotator rot);
     void setTranslate(Cvector::CVector t);
     void updateBuffer();
+   
 
 private:
     Cvector::CVector rootT;
