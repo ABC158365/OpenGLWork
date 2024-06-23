@@ -708,14 +708,14 @@ int main(int, char**)
             }
         }
 
-        if (key8toggle && sActor) {
+        if (key8toggle && sActor && currentMesh) {
             SkeletalMesh* temp = dynamic_cast<SkeletalMesh*>(currentMesh);
             camera01->Position = temp->root->getTranslate() + Cvector::CVector(0, 4, 0);
             camera01->targetPos = temp->root->getTranslate() + Cvector::CVector(0, 4, 0);
         }
 
 
-        if (sActor && glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+        if (sActor && glfwGetKey(window, GLFW_KEY_UP ) == GLFW_PRESS) {
             SkeletalMesh* temp = dynamic_cast<SkeletalMesh*>(currentMesh);
 
             Cvector::CVector f = CRotator::getForwardVector(temp->root->getRotator());
